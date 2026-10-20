@@ -209,7 +209,8 @@
       ],
       "images": [
         "/api/uploads/repilo.jpeg"
-      ]
+      ],
+      "link": ""
     },
     {
       "name": "JapTap — Digital Naam Jap Counter",
@@ -221,9 +222,9 @@
         "Implemented data services for multiple counters, user preferences, and progress tracking."
       ],
       "stack": [
-        "REST APIs ",
-        "Database Management ",
-        "Data Synchronization ",
+        "REST APIs",
+        "Database Management",
+        "Data Synchronization",
         "Android Backend Integration"
       ],
       "images": [
@@ -250,6 +251,66 @@
         "/api/uploads/198dd814-6a21-4c3f-b62c-eb1d3373b9fc.png"
       ],
       "link": "https://propushup.brainfleck.com/"
+    },
+    {
+      "name": "SalaryIQ — AI Salary & Career Assistant",
+      "type": "Android apps",
+      "description": "An AI-powered career application that helps users explore salary insights, build professional resumes, compare job offers, and make informed career decisions.",
+      "details": [
+        "Developed backend services for salary estimation workflows, career data management, and user-specific information.",
+        "Integrated API workflows supporting AI-powered resume assistance and job offer comparison features.",
+        "Implemented data management for saved salary insights, resume drafts, and personalized career information."
+      ],
+      "stack": [
+        "REST APIs",
+        "AI API Integration",
+        "Database Management",
+        "Data Processing"
+      ],
+      "images": [
+        "/api/uploads/14c82d75-b89a-4326-9ee3-965e834027df.png"
+      ],
+      "link": "https://salaryiq.brainfleck.com/"
+    },
+    {
+      "name": "DebtFree — Debt Payoff Planner",
+      "type": "Android apps",
+      "description": "A personal finance application that helps users organize loans and credit card balances, plan repayments, compare debt payoff strategies, and monitor their journey toward becoming debt-free.",
+      "details": [
+        "Developed backend services for loan management, repayment tracking, and payment history.",
+        "Implemented data-processing workflows for debt payoff schedules, interest calculations, and projected debt-free dates.",
+        "Supported financial progress tracking and debt repayment strategy management to help users monitor their plans."
+      ],
+      "stack": [
+        "REST APIs",
+        "Database Management",
+        "Financial Calculations",
+        "Data Processing"
+      ],
+      "images": [
+        "/api/uploads/667d69a4-dbe0-47ab-8deb-570d5ab2e3ec.png"
+      ],
+      "link": "https://debtfree.brainfleck.com/"
+    },
+    {
+      "name": "IPO Calendar — IPO & GMP Tracker",
+      "type": "Android apps",
+      "description": "A financial information application that provides IPO updates, Grey Market Premium (GMP) trends, subscription status, and important listing-related dates for the Indian stock market.",
+      "details": [
+        "Developed backend data services to manage IPO information, issue timelines, and Mainboard and SME IPO listings.",
+        "Integrated data-handling workflows for GMP updates, subscription information, and IPO registrar details.",
+        "Implemented API-driven data delivery to keep IPO information organized and accessible within the application."
+      ],
+      "stack": [
+        "REST APIs",
+        "Database Management",
+        "Third-Party API Integration",
+        "Financial Data Processing"
+      ],
+      "images": [
+        "/api/uploads/6ae6a56c-6db6-4a43-a754-8ce04af01f3b.png"
+      ],
+      "link": "https://ipo.brainfleck.com/"
     }
   ],
   "languages": [

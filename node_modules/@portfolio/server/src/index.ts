@@ -3,7 +3,7 @@ import express, { type NextFunction, type Request, type Response } from 'express
 import { randomBytes, randomUUID, scryptSync, timingSafeEqual } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { defaultContent, validateContent } from './content.js'
+import { defaultContent, projectValidationMessage, validateContent } from './content.js'
 
 const app = express()
 const port = Number(process.env.PORT ?? 3000)
@@ -141,7 +141,10 @@ app.post('/api/admin/logout', requireAdmin, (request, response) => {
   response.status(204).end()
 })
 app.put('/api/admin/content', requireAdmin, (request, response) => {
-  if (!validateContent(request.body)) return response.status(400).json({ error: 'Some fields are missing or exceed their allowed length. Please review the form and try again.' })
+  if (!validateContent(request.body)) {
+    const projectError = projectValidationMessage(request.body?.projects)
+    return response.status(400).json({ error: projectError ?? 'Some fields are missing or exceed their allowed length. Please review the form and try again.' })
+  }
   content = request.body
   saveJson(contentPath, content)
   response.json({ saved: true })

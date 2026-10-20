@@ -98,7 +98,17 @@ export default function AdminPanel() {
   }
   const save = async () => {
     setBusy(true); setError(''); setNotice('')
-    try { await api('/admin/content', { method: 'PUT', body: JSON.stringify(content) }); setNotice('Changes saved successfully.'); setSaved(true); window.setTimeout(() => setSaved(false), 1800) }
+    // Textareas are stored as arrays. Remove blank lines and trim pasted values
+    // before sending them, since the API correctly rejects empty list entries.
+    const cleanLines = (lines: string[]) => lines.map(line => line.trim()).filter(Boolean)
+    const payload: Content = {
+      ...content,
+      projects: content.projects.map(project => ({ ...project, name: project.name.trim(), type: project.type.trim(), description: project.description.trim(), link: project.link?.trim() ?? '', details: cleanLines(project.details), stack: cleanLines(project.stack) })),
+      experience: content.experience.map(job => ({ ...job, points: cleanLines(job.points) })),
+      skills: content.skills.map(group => ({ ...group, group: group.group.trim(), items: cleanLines(group.items) })),
+      languages: cleanLines(content.languages),
+    }
+    try { await api('/admin/content', { method: 'PUT', body: JSON.stringify(payload) }); setContent(payload); setNotice('Changes saved successfully.'); setSaved(true); window.setTimeout(() => setSaved(false), 1800) }
     catch (e) { setError(e instanceof Error ? e.message : 'Unable to save changes.') } finally { setBusy(false) }
   }
   const logout = async () => { try { await api('/admin/logout', { method: 'POST' }) } catch { /* session may have expired */ } finally { setLoggedIn(false); setNotice(''); setError('') } }

@@ -48,6 +48,24 @@ const text = (value: unknown, max: number) => typeof value === 'string' && value
 const textList = (value: unknown, maxItems: number, maxLength: number) => Array.isArray(value) && value.length <= maxItems && value.every(item => text(item, maxLength))
 const validUrlOrEmpty = (value: unknown) => typeof value === 'string' && value.length <= 300 && (!value || /^https:\/\//i.test(value))
 
+export function projectValidationMessage(value: unknown): string | null {
+  if (!Array.isArray(value)) return 'Projects must be a list. Please reload the page and try again.'
+  if (value.length > 16) return 'You can add up to 16 projects.'
+  for (const [index, project] of value.entries()) {
+    const label = `Project ${String(index + 1).padStart(2, '0')}`
+    if (!project || typeof project !== 'object') return `${label} has invalid data.`
+    const p = project as Project
+    if (!text(p.name, 120)) return `${label}: enter a name (up to 120 characters).`
+    if (!text(p.type, 120)) return `${label}: enter a project type (up to 120 characters).`
+    if (!text(p.description, 500)) return `${label}: enter a description (up to 500 characters).`
+    if (!textList(p.details, 12, 400)) return `${label}: highlights need 1–12 non-empty lines, each up to 400 characters.`
+    if (!textList(p.stack, 20, 70)) return `${label}: technologies need 1–20 non-empty lines, each up to 70 characters.`
+    if (p.link !== undefined && !validUrlOrEmpty(p.link)) return `${label}: the live URL must start with https:// and be no longer than 300 characters.`
+    if (p.images !== undefined && !(Array.isArray(p.images) && p.images.length <= 8 && p.images.every(image => typeof image === 'string' && image.length <= 300 && /^\/api\/uploads\/[a-zA-Z0-9._-]+$/.test(image)))) return `${label}: use up to 8 uploaded images.`
+  }
+  return null
+}
+
 export function validateContent(value: unknown): value is PortfolioContent {
   if (!value || typeof value !== 'object') return false
   const c = value as PortfolioContent
