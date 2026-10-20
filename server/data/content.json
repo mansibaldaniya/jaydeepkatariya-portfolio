@@ -22,7 +22,7 @@
   ],
   "metrics": [
     {
-      "value": "1+",
+      "value": "2+",
       "label": "Years of Experience"
     },
     {
@@ -51,17 +51,23 @@
         "Integrate Shopify APIs, Razorpay, Cashfree, and webhooks.",
         "Collaborate across teams to design, develop, test, and deploy applications.",
         "Improve databases and API performance; use Git and Docker in development and deployment workflows."
-      ]
+      ],
+      "companyEmail": "info@brainfleck.com",
+      "companyWebsite": "https://brainfleck.com/",
+      "companyPhone": "+91 9727371118"
     },
     {
       "role": "Software Developer Intern",
-      "company": "Brainfleck Solutions",
+      "company": "Initio Solutions",
       "period": "Apr 2024 – Sep 2024",
       "points": [
         "Contributed to full-stack application development with Laravel, React.js, PHP, and MySQL.",
         "Assisted with API integrations, frontend development, database management, and feature delivery.",
         "Worked with the development team on scalable, user-focused solutions."
-      ]
+      ],
+      "companyWebsite": "https://initio.com/",
+      "companyPhone": "+91 9727371117",
+      "companyEmail": "info@initio.com"
     }
   ],
   "education": [
