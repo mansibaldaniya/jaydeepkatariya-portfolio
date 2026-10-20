@@ -489,6 +489,13 @@ body{position:relative}body:before{content:"";position:fixed;inset:-8vh -5vw;z-i
 .footer-credit-links{display:flex;flex-wrap:nowrap;gap:0;margin:0;padding:0;border:0}
 .footer-credit-links a{padding-left:10px;border-left:1px solid #354036;font-size:8px}
 @media(max-width:760px){.footer-credit{flex-wrap:wrap;white-space:normal}.footer-credit-links{flex-wrap:wrap;gap:7px 0}.footer-credit-links a{white-space:nowrap}}
+.admin-topbar>.admin-signout{display:inline-flex;align-items:center;gap:10px;padding:9px 13px;border:1px solid #465347;border-radius:999px;background:#1a211b;color:#dce6d7;font:500 11px 'DM Sans',sans-serif;text-decoration:none;transition:background .2s,border-color .2s,color .2s,transform .2s}
+.admin-topbar>.admin-signout:hover{background:#273228;border-color:#91a784;color:#f0f5ec;transform:translateY(-1px)}
+.admin-signout span:last-child{color:#a9c393;font-size:14px}
+.footer-credit-links{align-items:center;gap:0}
+.footer-credit-links a{padding:0 0 0 12px;border-left:1px solid #354036;font:10px 'DM Mono',monospace;white-space:nowrap}
+.footer-credit-links a:first-child{padding-left:0;border-left:0}
+@media(max-width:760px){.footer-credit-links{flex-wrap:wrap;gap:8px 12px}.footer-credit-links a{padding:0;border:0;white-space:normal;overflow-wrap:anywhere}}
 .skill-grid-all .skill-group{grid-column:1/-1}
 .skill-card-heading{gap:0}
 .skill-number{display:none}
