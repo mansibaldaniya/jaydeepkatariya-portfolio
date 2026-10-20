@@ -212,24 +212,44 @@
       ]
     },
     {
-      "name": "JJAP TAP – Android Application",
+      "name": "JapTap — Digital Naam Jap Counter",
       "type": "Android apps",
-      "description": "Developed and maintained backend services and RESTful APIs.",
+      "description": "A digital mantra-counting and spiritual wellness application designed to help users track daily chanting, complete 108-bead mala cycles, and maintain consistent spiritual practices.",
       "details": [
-        "Developed and maintained backend services and RESTful APIs to support Android application functionality.",
-        "Implemented server-side business logic, database operations, and API integrations for seamless communication between the mobile app and backend.",
-        "Managed data processing, request validation, and error handling to ensure reliable application performance.",
-        "Collaborated with the development team to integrate backend APIs with the Android application and support smooth user experiences."
+        "Developed backend functionality to manage user chanting progress, daily goals, streaks, and historical statistics.",
+        "Supported data synchronization and persistence to maintain users’ progress across sessions and devices.",
+        "Implemented data services for multiple counters, user preferences, and progress tracking."
       ],
       "stack": [
-        "Android",
-        "PHP",
-        "Laravel"
+        "REST APIs ",
+        "Database Management ",
+        "Data Synchronization ",
+        "Android Backend Integration"
       ],
       "images": [
-        "/api/uploads/6fa52ace-7079-4d41-804a-3a35a061f25d.png"
+        "/api/uploads/8b5c0f64-2107-4e26-b90b-677d6aaadbae.png"
       ],
-      "link": ""
+      "link": "https://japtap.brainfleck.app/"
+    },
+    {
+      "name": "ProPushup — AI Fitness & Workout Tracker",
+      "type": "Android apps",
+      "description": "A fitness tracking application that helps users count push-ups, monitor workout performance, participate in challenges, and track their fitness progress over time.",
+      "details": [
+        "Developed backend services for workout session management, exercise history, and fitness progress tracking.",
+        "Supported data handling for user statistics, workout challenges, and leaderboard functionality.",
+        "Worked on backend integration to support synchronization and reliable access to fitness data."
+      ],
+      "stack": [
+        "REST APIs",
+        "Database Management",
+        "Data Synchronization",
+        "Fitness Data Processing"
+      ],
+      "images": [
+        "/api/uploads/198dd814-6a21-4c3f-b62c-eb1d3373b9fc.png"
+      ],
+      "link": "https://propushup.brainfleck.com/"
     }
   ],
   "languages": [
