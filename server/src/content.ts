@@ -4,12 +4,15 @@ export type Education = { degree: string; school: string; period: string }
 export type Metric = { value: string; label: string }
 export type PortfolioContent = {
   name: string; title: string; location: string; availability: string; email: string; phone: string; linkedin: string; github: string
-  metrics: Metric[]; experience: Experience[]; education: Education[]; skills: { group: string; items: string[] }[]; projects: Project[]; languages: string[]
+  heroDescription: string; heroMessages: string[]; portraitRoles: string[]; metrics: Metric[]; experience: Experience[]; education: Education[]; skills: { group: string; items: string[] }[]; projects: Project[]; languages: string[]
 }
 
 export const defaultContent: PortfolioContent = {
   name: 'Jaydeep Katariya', title: 'Software Developer', location: 'Surat, India', availability: 'Open to opportunities',
   email: 'jaydeepkatariya21@gmail.com', phone: '+91 70462 99866', linkedin: '', github: '',
+  heroDescription: 'I design and build thoughtful digital experiences, from scalable web platforms to Shopify apps and AI-powered products.',
+  heroMessages: ['Open to New Opportunities', 'Available for Freelance Work', 'Open to Work & Collaboration', 'Turning Ideas into Digital Experiences'],
+  portraitRoles: ['Shopify App Developer', 'Backend Developer', 'SaaS Application Developer', 'API Integration Developer'],
   metrics: [
     { value: '1+', label: 'Years of Experience' },
     { value: '10+', label: 'Projects Built' },
@@ -49,6 +52,7 @@ export function validateContent(value: unknown): value is PortfolioContent {
   const c = value as PortfolioContent
   return text(c.name, 80) && text(c.title, 100) && text(c.location, 100) && text(c.availability, 100) &&
     text(c.email, 200) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.email) && text(c.phone, 50) && validUrlOrEmpty(c.linkedin) && validUrlOrEmpty(c.github) &&
+    text(c.heroDescription, 300) && textList(c.heroMessages, 4, 100) && c.heroMessages.length === 4 && textList(c.portraitRoles, 4, 100) && c.portraitRoles.length === 4 &&
     Array.isArray(c.metrics) && c.metrics.length === 4 && c.metrics.every(metric => metric && text(metric.value, 20) && text(metric.label, 60)) &&
     Array.isArray(c.experience) && c.experience.length <= 12 && c.experience.every(e => e && text(e.role, 100) && text(e.company, 120) && text(e.period, 80) && textList(e.points, 12, 400)) &&
     Array.isArray(c.education) && c.education.length <= 8 && c.education.every(e => e && text(e.degree, 140) && text(e.school, 140) && text(e.period, 80)) &&

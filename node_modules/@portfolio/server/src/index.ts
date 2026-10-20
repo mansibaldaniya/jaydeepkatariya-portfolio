@@ -32,9 +32,17 @@ function saveJson(path: string, value: unknown) {
 if (!existsSync(contentPath)) saveJson(contentPath, defaultContent)
 const savedContent = readJson<Partial<typeof defaultContent> & { summary?: unknown }>(contentPath, defaultContent)
 const { summary: legacySummary, ...savedContentWithoutSummary } = savedContent
-let content = { ...defaultContent, ...savedContentWithoutSummary, metrics: savedContent.metrics ?? defaultContent.metrics }
+const filteredPortraitRoles = savedContent.portraitRoles?.filter(role => role !== 'Full Stack Developer' && role !== 'Software Developer')
+let content = {
+  ...defaultContent,
+  ...savedContentWithoutSummary,
+  heroDescription: savedContent.heroDescription ?? defaultContent.heroDescription,
+  heroMessages: savedContent.heroMessages ?? defaultContent.heroMessages,
+  portraitRoles: filteredPortraitRoles?.length === 4 ? filteredPortraitRoles : defaultContent.portraitRoles,
+  metrics: savedContent.metrics ?? defaultContent.metrics,
+}
 if (!validateContent(content)) { content = defaultContent; saveJson(contentPath, content) }
-else if (legacySummary !== undefined || savedContent.metrics === undefined) saveJson(contentPath, content)
+else if (legacySummary !== undefined || savedContent.metrics === undefined || savedContent.heroDescription === undefined || savedContent.heroMessages === undefined || savedContent.portraitRoles?.length !== 4 || filteredPortraitRoles?.length !== 4) saveJson(contentPath, content)
 let admin: Admin | null = readJson<Admin | null>(adminPath, null)
 if (!admin && process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD) {
   const salt = randomBytes(16).toString('hex')

@@ -7,9 +7,22 @@
   "phone": "+91 70462 99866",
   "linkedin": "",
   "github": "",
+  "heroDescription": "I design and build thoughtful digital experiences, from scalable web platforms to Shopify apps and AI-powered products.",
+  "heroMessages": [
+    "Open to New Opportunities",
+    "Available for Freelance Work",
+    "Open to Work & Collaboration",
+    "Turning Ideas into Digital Experiences"
+  ],
+  "portraitRoles": [
+    "Shopify App Developer",
+    "Backend Developer",
+    "SaaS Application Developer",
+    "API Integration Developer"
+  ],
   "metrics": [
     {
-      "value": "2+",
+      "value": "1+",
       "label": "Years of Experience"
     },
     {

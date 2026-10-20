@@ -8,8 +8,8 @@ type Project = { name: string; type: string; description: string; details: strin
 type Education = { degree: string; school: string; period: string }
 type SkillGroup = { group: string; items: string[] }
 type Metric = { value: string; label: string }
-type Content = { name: string; title: string; location: string; availability: string; email: string; phone: string; linkedin: string; github: string; metrics: Metric[]; experience: Experience[]; education: Education[]; skills: SkillGroup[]; projects: Project[]; languages: string[] }
-const blank: Content = { name: '', title: '', location: '', availability: '', email: '', phone: '', linkedin: '', github: '', metrics: [], experience: [], education: [], skills: [], projects: [], languages: [] }
+type Content = { name: string; title: string; location: string; availability: string; email: string; phone: string; linkedin: string; github: string; heroDescription: string; heroMessages: string[]; portraitRoles: string[]; metrics: Metric[]; experience: Experience[]; education: Education[]; skills: SkillGroup[]; projects: Project[]; languages: string[] }
+const blank: Content = { name: '', title: '', location: '', availability: '', email: '', phone: '', linkedin: '', github: '', heroDescription: '', heroMessages: [], portraitRoles: [], metrics: [], experience: [], education: [], skills: [], projects: [], languages: [] }
 async function api(path: string, options: RequestInit = {}) {
   const response = await fetch(`/api${path}`, { ...options, credentials: 'include', headers: { 'Content-Type': 'application/json', ...options.headers } })
   const data = response.status === 204 ? null : await response.json()
@@ -81,7 +81,20 @@ function Portfolio() {
   const [loading, setLoading] = useState(true)
   const [contactSent, setContactSent] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [typedName, setTypedName] = useState('')
   useEffect(() => { api('/content').then(setC).catch(() => undefined).finally(() => setLoading(false)) }, [])
+  useEffect(() => {
+    if (!c.name) { setTypedName(''); return }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setTypedName(c.name); return }
+    setTypedName('')
+    let position = 0
+    const timer = window.setInterval(() => {
+      position += 1
+      setTypedName(c.name.slice(0, position))
+      if (position >= c.name.length) window.clearInterval(timer)
+    }, 75)
+    return () => window.clearInterval(timer)
+  }, [c.name])
   useEffect(() => {
     if (!menuOpen) return
     const previousOverflow = document.body.style.overflow
@@ -100,17 +113,17 @@ function Portfolio() {
     <header className="topbar wrap"><a className="brand" href="#home" aria-label={`${c.name} home`} onClick={() => setMenuOpen(false)}><img className="brand-logo" src="/jaydeep-logo.svg" alt=""/><span>Jaydeep Katariya</span></a><button className="menu-toggle" type="button" aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={menuOpen} aria-controls="site-navigation" onClick={() => setMenuOpen(open => !open)}><span/><span/><span/></button><nav id="site-navigation" className={menuOpen ? 'is-open' : ''}><div className="menu-drawer-heading"><button type="button" className="menu-close" aria-label="Close navigation menu" onClick={() => setMenuOpen(false)}><span/><span/></button></div><a href="#work" onClick={() => setMenuOpen(false)}>Work</a><a href="#experience" onClick={() => setMenuOpen(false)}>Experience</a><a href="#about" onClick={() => setMenuOpen(false)}>About</a><a href="#toolkit" onClick={() => setMenuOpen(false)}>My toolkit</a><a className="nav-cta" href="#contact" onClick={() => setMenuOpen(false)}>Contact <span>↗</span></a></nav></header>
     <section className="hero wrap" id="home">
       <div className="hero-copy">
-        <p className="eyebrow"><span className="live-dot"/>{c.availability}<span className="eyebrow-place">{c.location}</span></p>
-        <p className="hero-hello">Hello<span>.</span></p>
-        <p className="hero-name">I&apos;m <strong>{c.name}</strong></p>
-        <h1>{c.title}</h1>
-        <p className="hero-intro">I build thoughtful web, Shopify, and AI experiences, from the first sketch through launch.</p>
-        <div className="hero-actions"><a className="button button-dark" href={`mailto:${c.email}?subject=${encodeURIComponent('Let us build something together')}`}>Got a project? <span>&rarr;</span></a><a className="button button-outline" href="/jaydeep-katariya-resume.pdf" target="_blank" rel="noreferrer">My resume <span>&#8599;</span></a></div>
+        <p className="eyebrow"><span className="live-dot"/><span className="hero-status" aria-label={c.heroMessages.join('; ')}>{c.heroMessages.map((message, index) => <span className="hero-status-item" key={`${message}-${index}`} style={{ animationDelay: `${-index * 4}s` }}>{message}</span>)}</span></p>
+        <p className="hero-greeting">HELLO, I&apos;M</p>
+        <p className="hero-name"><strong className="typed-name"><span className="typed-name-reserve" aria-hidden="true">{c.name}</span><span className="typed-name-output" aria-hidden="true">{Array.from(typedName).map((letter,index)=><span className="name-letter" key={`${index}-${letter}`} style={{animationDelay:`${index*55}ms`}}>{letter === ' ' ? '\u00a0' : letter}</span>)}</span><span className="sr-only">{c.name}</span></strong></p>
+        <h1 className="hero-role"><span className="hero-role-mark" aria-hidden="true"/><span className="hero-role-title">{c.title}</span></h1>
+        <p className="hero-intro">{c.heroDescription}</p>
+        <div className="hero-actions"><a className="button button-dark" href="#work">Explore work <span>&rarr;</span></a><a className="button button-outline" href="/jaydeep-katariya-resume.pdf" target="_blank" rel="noreferrer">My resume <span>&#8599;</span></a></div>
       </div>
       <div className="hero-art" aria-label={`${c.name}, ${c.title}`}>
         <img className="hero-portrait" src="/jaydeep-portrait-dark.png" alt={`${c.name}, smiling in formal attire`}/>
         <div className="portrait-halo"/><div className="portrait-orbit portrait-orbit-a"/><div className="portrait-orbit portrait-orbit-b"/>
-        <div className="portrait-caption"><span className="portrait-caption-dot"/>FULL-STACK DEVELOPER <span>/</span> SURAT, INDIA</div>
+        <div className="portrait-role-tags" role="list" aria-label="Development specialties">{c.portraitRoles.map((role,index)=><span className={`portrait-role-tag portrait-role-tag-${index+1}`} role="listitem" key={`${role}-${index}`}><i aria-hidden="true"/>{role}</span>)}</div>
       </div>
     </section>
     <section className="hero-metrics wrap" aria-label="Career highlights"><div className="hero-metrics-track">{[0,1].map(copy => <div className="hero-metrics-set" key={copy} aria-hidden={copy === 1}>{c.metrics.map((metric, index) => <article key={`${copy}-${index}`}><strong>{metric.value}</strong><span>{metric.label}</span></article>)}</div>)}</div></section>
