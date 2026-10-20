@@ -5,7 +5,7 @@
   "availability": "Open to opportunities",
   "email": "jaydeepkatariya21@gmail.com",
   "phone": "+91 70462 99866",
-  "linkedin": "",
+  "linkedin": "https://www.linkedin.com/in/jaydeep-katariya-390502156/",
   "github": "",
   "heroDescription": "I design and build thoughtful digital experiences, from scalable web platforms to Shopify apps and AI-powered products.",
   "heroMessages": [
@@ -141,7 +141,8 @@
       ],
       "images": [
         "/api/uploads/chatara.jpeg"
-      ]
+      ],
+      "link": "https://apps.shopify.com/chatara-ai-chat-assistant?st_source=autocomplete&surface_detail=autocomplete_apps"
     },
     {
       "name": "ChalDigital",
@@ -157,6 +158,10 @@
         "React",
         "PHP",
         "MySQL"
+      ],
+      "link": "https://chaldigital.com/",
+      "images": [
+        "/api/uploads/49cda248-dab2-497a-aadc-40e4628d9c4b.png"
       ]
     },
     {
@@ -176,7 +181,8 @@
       ],
       "images": [
         "/api/uploads/questly.jpeg"
-      ]
+      ],
+      "link": "https://apps.shopify.com/questly-smart-quiz?st_source=autocomplete&surface_detail=autocomplete_apps"
     },
     {
       "name": "Repilo",
@@ -197,6 +203,26 @@
       "images": [
         "/api/uploads/repilo.jpeg"
       ]
+    },
+    {
+      "name": "JJAP TAP – Android Application",
+      "type": "Android apps",
+      "description": "Developed and maintained backend services and RESTful APIs.",
+      "details": [
+        "Developed and maintained backend services and RESTful APIs to support Android application functionality.",
+        "Implemented server-side business logic, database operations, and API integrations for seamless communication between the mobile app and backend.",
+        "Managed data processing, request validation, and error handling to ensure reliable application performance.",
+        "Collaborated with the development team to integrate backend APIs with the Android application and support smooth user experiences."
+      ],
+      "stack": [
+        "Android",
+        "PHP",
+        "Laravel"
+      ],
+      "images": [
+        "/api/uploads/6fa52ace-7079-4d41-804a-3a35a061f25d.png"
+      ],
+      "link": ""
     }
   ],
   "languages": [
