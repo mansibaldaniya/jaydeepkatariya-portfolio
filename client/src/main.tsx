@@ -93,6 +93,47 @@ function Portfolio() {
 
   useEffect(() => { api('/content').then(setC).catch(() => undefined).finally(() => setLoading(false)) }, [])
   useEffect(() => {
+    if (!c.name) return
+    const title = `${c.name} | ${c.title} & Shopify App Developer`
+    const description = `${c.name} is a ${c.title.toLowerCase()} in ${c.location}, building Shopify apps, full-stack web platforms, and AI-powered products.`
+    document.title = title
+    const setMeta = (selector: string, content: string, attribute = 'content') => {
+      const element = document.querySelector<HTMLMetaElement>(selector)
+      if (element) element.setAttribute(attribute, content)
+    }
+    setMeta('meta[name="description"]', description)
+    setMeta('meta[property="og:title"]', title)
+    setMeta('meta[property="og:description"]', description)
+    setMeta('meta[property="og:image"]', `${window.location.origin}/jaydeep-portrait-dark.png`)
+    setMeta('meta[name="twitter:title"]', title)
+    setMeta('meta[name="twitter:description"]', description)
+    setMeta('meta[name="twitter:image"]', `${window.location.origin}/jaydeep-portrait-dark.png`)
+    let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')
+    if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.append(canonical) }
+    canonical.href = `${window.location.origin}${window.location.pathname}`
+    let structuredData = document.querySelector<HTMLScriptElement>('#person-structured-data')
+    if (!structuredData) { structuredData = document.createElement('script'); structuredData.id = 'person-structured-data'; structuredData.type = 'application/ld+json'; document.head.append(structuredData) }
+    structuredData.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'ProfilePage',
+      name: `${c.name} | ${c.title}`,
+      url: window.location.origin,
+      mainEntity: {
+        '@type': 'Person',
+        name: c.name,
+        jobTitle: c.title,
+        description,
+        url: window.location.origin,
+        image: `${window.location.origin}/jaydeep-portrait-dark.png`,
+        email: c.email,
+        telephone: c.phone,
+        address: { '@type': 'PostalAddress', addressLocality: c.location.split(',')[0]?.trim(), addressCountry: 'IN' },
+        sameAs: [c.linkedin, 'https://github.com/Jaydeepkatariy'].filter(Boolean),
+        knowsAbout: [...new Set(c.skills.flatMap(group => group.items))],
+      },
+    })
+  }, [c])
+  useEffect(() => {
     if (!c.name) { setTypedName(''); return }
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setTypedName(c.name); return }
     setTypedName('')
