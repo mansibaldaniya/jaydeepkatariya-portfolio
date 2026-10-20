@@ -121,7 +121,8 @@
     {
       "group": "Testing",
       "items": [
-        "Black box & white box",
+        "Black box testing",
+        "White box testing",
         "Functional testing",
         "API testing",
         "Cross-browser testing"

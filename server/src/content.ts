@@ -32,7 +32,7 @@ export const defaultContent: PortfolioContent = {
     { group: 'Frameworks & Backend', items: ['Laravel', 'Craft CMS', 'PHP 8+'] },
     { group: 'Tools & Platforms', items: ['Git', 'Docker', 'Shopify', 'Shopify Polaris', 'OpenAI API', 'Webhooks'] },
     { group: 'Database', items: ['MySQL'] },
-    { group: 'Testing', items: ['Black box & white box', 'Functional testing', 'API testing', 'Cross-browser testing'] },
+    { group: 'Testing', items: ['Black box testing', 'White box testing', 'Functional testing', 'API testing', 'Cross-browser testing'] },
   ],
   projects: [
     { name: 'Chatara AI — Smart Assistant', type: 'Shopify Application', description: 'An AI-powered Shopify assistant that helps customers discover products and get support through natural conversation.', details: ['Built natural-language customer interactions, product discovery, recommendations, and conversational memory with the OpenAI API.', 'Implemented real-time product and order synchronization using Shopify webhooks and MCP integration.', 'Created a customizable React and Shopify Polaris dashboard for chatbot appearance, behavior, and store setup.'], stack: ['OpenAI API', 'Shopify', 'React', 'Shopify Polaris', 'Webhooks'], images: ['/api/uploads/chatara.jpeg'], link: 'https://apps.shopify.com/chatara-ai-chat-assistant?st_source=autocomplete&surface_detail=autocomplete_apps' },
