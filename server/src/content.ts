@@ -1,15 +1,21 @@
 export type Experience = { role: string; company: string; period: string; points: string[] }
 export type Project = { name: string; type: string; description: string; details: string[]; stack: string[]; images?: string[] }
 export type Education = { degree: string; school: string; period: string }
+export type Metric = { value: string; label: string }
 export type PortfolioContent = {
   name: string; title: string; location: string; availability: string; email: string; phone: string; linkedin: string; github: string
-  summary: string; experience: Experience[]; education: Education[]; skills: { group: string; items: string[] }[]; projects: Project[]; languages: string[]
+  metrics: Metric[]; experience: Experience[]; education: Education[]; skills: { group: string; items: string[] }[]; projects: Project[]; languages: string[]
 }
 
 export const defaultContent: PortfolioContent = {
   name: 'Jaydeep Katariya', title: 'Software Developer', location: 'Surat, India', availability: 'Open to opportunities',
   email: 'jaydeepkatariya21@gmail.com', phone: '+91 70462 99866', linkedin: '', github: '',
-  summary: 'Passionate and detail-oriented Software Developer with 1.5+ years of professional experience developing scalable web applications, AI-powered solutions, and Shopify platforms. Skilled in Laravel, React.js, PHP, Shopify integrations, and payment gateways, with experience building SaaS applications, chatbot systems, affiliate platforms, responsive interfaces, and robust APIs.',
+  metrics: [
+    { value: '1+', label: 'Years of Experience' },
+    { value: '10+', label: 'Projects Built' },
+    { value: '8+', label: 'Technologies' },
+    { value: '3+', label: 'Full Stack Applications' },
+  ],
   experience: [
     { role: 'Junior Software Developer', company: 'Brainfleck Solutions', period: 'Oct 2024 – Present', points: ['Develop and maintain full-stack applications using Laravel, React.js, PHP, and MySQL.', 'Build scalable backend APIs and business logic for Shopify and e-learning platforms.', 'Integrate AI-powered chatbots using the OpenAI API and Shopify ecosystem tools.', 'Create responsive interfaces with React.js, JavaScript, jQuery, HTML5, CSS3, Ajax, and Blade.', 'Integrate Shopify APIs, Razorpay, Cashfree, and webhooks.', 'Collaborate across teams to design, develop, test, and deploy applications.', 'Improve databases and API performance; use Git and Docker in development and deployment workflows.'] },
     { role: 'Software Developer Intern', company: 'Brainfleck Solutions', period: 'Apr 2024 – Sep 2024', points: ['Contributed to full-stack application development with Laravel, React.js, PHP, and MySQL.', 'Assisted with API integrations, frontend development, database management, and feature delivery.', 'Worked with the development team on scalable, user-focused solutions.'] },
@@ -42,7 +48,8 @@ export function validateContent(value: unknown): value is PortfolioContent {
   if (!value || typeof value !== 'object') return false
   const c = value as PortfolioContent
   return text(c.name, 80) && text(c.title, 100) && text(c.location, 100) && text(c.availability, 100) &&
-    text(c.email, 200) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.email) && text(c.phone, 50) && validUrlOrEmpty(c.linkedin) && validUrlOrEmpty(c.github) && text(c.summary, 1200) &&
+    text(c.email, 200) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.email) && text(c.phone, 50) && validUrlOrEmpty(c.linkedin) && validUrlOrEmpty(c.github) &&
+    Array.isArray(c.metrics) && c.metrics.length === 4 && c.metrics.every(metric => metric && text(metric.value, 20) && text(metric.label, 60)) &&
     Array.isArray(c.experience) && c.experience.length <= 12 && c.experience.every(e => e && text(e.role, 100) && text(e.company, 120) && text(e.period, 80) && textList(e.points, 12, 400)) &&
     Array.isArray(c.education) && c.education.length <= 8 && c.education.every(e => e && text(e.degree, 140) && text(e.school, 140) && text(e.period, 80)) &&
     Array.isArray(c.skills) && c.skills.length <= 16 && c.skills.every(s => s && text(s.group, 80) && textList(s.items, 30, 70)) &&

@@ -30,8 +30,11 @@ function saveJson(path: string, value: unknown) {
   renameSync(temporary, path)
 }
 if (!existsSync(contentPath)) saveJson(contentPath, defaultContent)
-let content = readJson(contentPath, defaultContent)
+const savedContent = readJson<Partial<typeof defaultContent> & { summary?: unknown }>(contentPath, defaultContent)
+const { summary: legacySummary, ...savedContentWithoutSummary } = savedContent
+let content = { ...defaultContent, ...savedContentWithoutSummary, metrics: savedContent.metrics ?? defaultContent.metrics }
 if (!validateContent(content)) { content = defaultContent; saveJson(contentPath, content) }
+else if (legacySummary !== undefined || savedContent.metrics === undefined) saveJson(contentPath, content)
 let admin: Admin | null = readJson<Admin | null>(adminPath, null)
 if (!admin && process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD) {
   const salt = randomBytes(16).toString('hex')

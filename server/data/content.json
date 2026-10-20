@@ -7,12 +7,29 @@
   "phone": "+91 70462 99866",
   "linkedin": "",
   "github": "",
-  "summary": "Passionate and detail-oriented Software Developer with 1.5+ years of professional experience developing scalable web applications, AI-powered solutions, and Shopify platforms. Skilled in Laravel, React.js, PHP, Shopify integrations, and payment gateways, with experience building SaaS applications, chatbot systems, affiliate platforms, responsive interfaces, and robust APIs.",
+  "metrics": [
+    {
+      "value": "1+",
+      "label": "Years of Experience"
+    },
+    {
+      "value": "10+",
+      "label": "Projects Built"
+    },
+    {
+      "value": "8+",
+      "label": "Technologies"
+    },
+    {
+      "value": "3+",
+      "label": "Full Stack Applications"
+    }
+  ],
   "experience": [
     {
       "role": "Junior Software Developer",
       "company": "Brainfleck Solutions",
-      "period": "Oct 2024 - Present",
+      "period": "Oct 2024 – Present",
       "points": [
         "Develop and maintain full-stack applications using Laravel, React.js, PHP, and MySQL.",
         "Build scalable backend APIs and business logic for Shopify and e-learning platforms.",
@@ -26,7 +43,7 @@
     {
       "role": "Software Developer Intern",
       "company": "Brainfleck Solutions",
-      "period": "Apr 2024 - Sep 2024",
+      "period": "Apr 2024 – Sep 2024",
       "points": [
         "Contributed to full-stack application development with Laravel, React.js, PHP, and MySQL.",
         "Assisted with API integrations, frontend development, database management, and feature delivery.",
@@ -38,12 +55,12 @@
     {
       "degree": "Master of Computer Applications (MCA)",
       "school": "LJ University",
-      "period": "2022 - 2024"
+      "period": "2022 – 2024"
     },
     {
       "degree": "Bachelor of Arts",
       "school": "The Maharaja Sayajirao University",
-      "period": "2019 - 2022"
+      "period": "2019 – 2022"
     }
   ],
   "skills": [
@@ -94,7 +111,7 @@
   ],
   "projects": [
     {
-      "name": "Chatara AI - Smart Assistant",
+      "name": "Chatara AI — Smart Assistant",
       "type": "Shopify Application",
       "description": "An AI-powered Shopify assistant that helps customers discover products and get support through natural conversation.",
       "details": [
@@ -170,8 +187,8 @@
     }
   ],
   "languages": [
-    "English - Professional working proficiency",
-    "Hindi - Professional working proficiency",
-    "Gujarati - Native speaker"
+    "English — Professional working proficiency",
+    "Hindi — Professional working proficiency",
+    "Gujarati — Native speaker"
   ]
 }
