@@ -7,3 +7,6 @@ server/data/admin.json.tmp
 .env
 .env.*
 !.env.example
+server/.env
+server/.env.*
+!server/.env.example

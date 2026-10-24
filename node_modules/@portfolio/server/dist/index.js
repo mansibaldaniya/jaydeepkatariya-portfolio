@@ -1,15 +1,21 @@
+import dotenv from 'dotenv';
 import cors from 'cors';
 import express from 'express';
+import nodemailer from 'nodemailer';
 import { randomBytes, randomUUID, scryptSync, timingSafeEqual } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { defaultContent, validateContent } from './content.js';
+import { fileURLToPath } from 'node:url';
+import { defaultContent, projectValidationMessage, validateContent } from './content.js';
 const app = express();
 const port = Number(process.env.PORT ?? 3000);
 const dataDir = resolve(process.cwd(), 'data');
 const contentPath = resolve(dataDir, 'content.json');
 const adminPath = resolve(dataDir, 'admin.json');
 const uploadDir = resolve(process.cwd(), 'uploads');
+const portfolioLogoPath = fileURLToPath(new URL('../../client/public/jaydeep-logo.svg', import.meta.url));
+dotenv.config({ path: resolve(process.cwd(), 'server/.env') });
+dotenv.config();
 mkdirSync(dataDir, { recursive: true });
 mkdirSync(uploadDir, { recursive: true });
 const sessions = new Map();
@@ -32,11 +38,23 @@ function saveJson(path, value) {
 }
 if (!existsSync(contentPath))
     saveJson(contentPath, defaultContent);
-let content = readJson(contentPath, defaultContent);
+const savedContent = readJson(contentPath, defaultContent);
+const { summary: legacySummary, ...savedContentWithoutSummary } = savedContent;
+const filteredPortraitRoles = savedContent.portraitRoles?.filter(role => role !== 'Full Stack Developer' && role !== 'Software Developer');
+let content = {
+    ...defaultContent,
+    ...savedContentWithoutSummary,
+    heroDescription: savedContent.heroDescription ?? defaultContent.heroDescription,
+    heroMessages: savedContent.heroMessages ?? defaultContent.heroMessages,
+    portraitRoles: filteredPortraitRoles?.length === 4 ? filteredPortraitRoles : defaultContent.portraitRoles,
+    metrics: savedContent.metrics ?? defaultContent.metrics,
+};
 if (!validateContent(content)) {
     content = defaultContent;
     saveJson(contentPath, content);
 }
+else if (legacySummary !== undefined || savedContent.metrics === undefined || savedContent.heroDescription === undefined || savedContent.heroMessages === undefined || savedContent.portraitRoles?.length !== 4 || filteredPortraitRoles?.length !== 4)
+    saveJson(contentPath, content);
 let admin = readJson(adminPath, null);
 if (!admin && process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD) {
     const salt = randomBytes(16).toString('hex');
@@ -79,6 +97,9 @@ function constantTimeMatch(a, b) {
     const right = Buffer.from(b, 'hex');
     return left.length === right.length && timingSafeEqual(left, right);
 }
+function escapeHtml(value) {
+    return value.replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
+}
 app.post('/api/admin/uploads', requireAdmin, (request, response) => {
     const dataUrl = request.body?.dataUrl;
     const match = typeof dataUrl === 'string' ? /^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/]+={0,2})$/.exec(dataUrl) : null;
@@ -98,6 +119,75 @@ app.post('/api/admin/uploads', requireAdmin, (request, response) => {
 });
 app.get('/api/health', (_request, response) => response.json({ status: 'ok', message: 'Portfolio API is running' }));
 app.get('/api/content', (_request, response) => response.json(content));
+const contactAttempts = new Map();
+app.post('/api/contact', async (request, response) => {
+    const address = request.ip ?? 'unknown';
+    const now = Date.now();
+    const attempt = contactAttempts.get(address);
+    if (attempt && attempt.resetAt > now && attempt.count >= 5) {
+        return response.status(429).json({ error: 'Too many messages. Please try again in an hour.' });
+    }
+    const { name, email, message } = request.body ?? {};
+    if (typeof name !== 'string' || !name.trim() || name.length > 100 ||
+        typeof email !== 'string' || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+        typeof message !== 'string' || !message.trim() || message.length > 5000) {
+        return response.status(400).json({ error: 'Enter a valid name, email address, and message (up to 5,000 characters).' });
+    }
+    const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, CONTACT_TO } = process.env;
+    if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS || !CONTACT_TO) {
+        return response.status(503).json({ error: 'The contact form is temporarily unavailable. Please email me directly.' });
+    }
+    const current = attempt && attempt.resetAt > now ? attempt : { count: 0, resetAt: now + 60 * 60 * 1000 };
+    contactAttempts.set(address, { ...current, count: current.count + 1 });
+    try {
+        const port = Number(SMTP_PORT ?? 465);
+        if (![465, 587].includes(port))
+            return response.status(500).json({ error: 'Email service is not configured correctly.' });
+        const transporter = nodemailer.createTransport({ host: SMTP_HOST, port, secure: port === 465, auth: { user: SMTP_USER, pass: SMTP_PASS } });
+        const safeName = escapeHtml(name.trim());
+        const safeEmail = escapeHtml(email.trim());
+        const safeMessage = escapeHtml(message.trim());
+        await transporter.sendMail({
+            from: `Portfolio contact <${SMTP_USER}>`,
+            to: CONTACT_TO,
+            replyTo: { name: name.trim(), address: email.trim() },
+            subject: `Portfolio enquiry from ${name.trim()}`,
+            text: `Name: ${name.trim()}\nEmail: ${email.trim()}\n\n${message.trim()}`,
+            attachments: [{ filename: 'jaydeep-logo.svg', path: portfolioLogoPath, cid: 'jaydeep-portfolio-logo' }],
+            html: `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:32px 12px;background:#eef1ec;font-family:Arial,Helvetica,sans-serif;color:#202820;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #dce3da;border-radius:16px;overflow:hidden;">
+    <tr><td style="height:5px;background:#829477;font-size:0;line-height:0;">&nbsp;</td></tr>
+    <tr><td style="padding:30px 36px 24px;background:#121914;">
+      <table role="presentation" cellspacing="0" cellpadding="0"><tr>
+        <td style="padding-right:14px;vertical-align:middle;"><img src="cid:jaydeep-portfolio-logo" width="48" height="48" alt="Jaydeep Katariya" style="display:block;width:48px;height:48px;object-fit:contain;"></td>
+        <td style="vertical-align:middle;"><div style="color:#eef1e9;font-size:17px;font-weight:700;letter-spacing:.2px;">Jaydeep Katariya</div><div style="margin-top:5px;color:#a9b8a3;font-size:11px;letter-spacing:1.6px;text-transform:uppercase;">Portfolio contact</div></td>
+      </tr></table>
+    </td></tr>
+    <tr><td style="padding:34px 36px 12px;"><div style="color:#829477;font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;">New message</div><h1 style="margin:10px 0 0;color:#202820;font-size:25px;line-height:1.3;font-weight:600;">You have a new enquiry</h1></td></tr>
+    <tr><td style="padding:18px 36px 30px;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+        <tr><td style="padding:13px 0;border-bottom:1px solid #e8ece6;color:#788174;font-size:11px;letter-spacing:1px;text-transform:uppercase;width:90px;">From</td><td style="padding:13px 0;border-bottom:1px solid #e8ece6;color:#202820;font-size:14px;font-weight:600;">${safeName}</td></tr>
+        <tr><td style="padding:13px 0;border-bottom:1px solid #e8ece6;color:#788174;font-size:11px;letter-spacing:1px;text-transform:uppercase;">Email</td><td style="padding:13px 0;border-bottom:1px solid #e8ece6;font-size:14px;"><a href="mailto:${safeEmail}" style="color:#637a59;text-decoration:none;">${safeEmail}</a></td></tr>
+      </table>
+      <div style="margin-top:24px;padding:20px 22px;background:#f5f7f3;border:1px solid #e5eae2;border-radius:10px;">
+        <div style="margin-bottom:11px;color:#788174;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;">Message</div>
+        <div style="color:#303830;font-size:15px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere;">${safeMessage}</div>
+      </div>
+      <p style="margin:24px 0 0;color:#788174;font-size:12px;line-height:1.6;">You can reply directly to this email to get back to ${safeName}.</p>
+    </td></tr>
+    <tr><td style="padding:18px 36px;background:#f7f8f6;border-top:1px solid #e8ece6;color:#8a9286;font-size:11px;line-height:1.5;">Sent from the contact form on Jaydeep Katariya’s portfolio.</td></tr>
+  </table>
+</body></html>`,
+        });
+        return response.json({ sent: true });
+    }
+    catch (error) {
+        console.error('Contact email could not be sent:', error instanceof Error ? error.message : 'Unknown SMTP error');
+        return response.status(502).json({ error: 'Your message could not be sent right now. Please try again or email me directly.' });
+    }
+});
 app.get('/api/admin/status', (_request, response) => response.json({ configured: Boolean(admin) }));
 app.post('/api/admin/setup', (request, response) => {
     if (admin)
@@ -139,8 +229,10 @@ app.post('/api/admin/logout', requireAdmin, (request, response) => {
     response.status(204).end();
 });
 app.put('/api/admin/content', requireAdmin, (request, response) => {
-    if (!validateContent(request.body))
-        return response.status(400).json({ error: 'Some fields are missing or exceed their allowed length. Please review the form and try again.' });
+    if (!validateContent(request.body)) {
+        const projectError = projectValidationMessage(request.body?.projects);
+        return response.status(400).json({ error: projectError ?? 'Some fields are missing or exceed their allowed length. Please review the form and try again.' });
+    }
     content = request.body;
     saveJson(contentPath, content);
     response.json({ saved: true });
